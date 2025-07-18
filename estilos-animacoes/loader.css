@@ -1,0 +1,22 @@
+.loader {
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  width: 60px;
+  height: 60px;
+  background-color: transparent;
+  z-index: 1;
+  border: 5px solid #69ee10;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  animation: rotacao 3s linear;
+}
+
+@keyframes rotacao {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
