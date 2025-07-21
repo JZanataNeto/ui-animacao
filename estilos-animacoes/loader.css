@@ -1,12 +1,8 @@
-.loader {
-  position: fixed;
-  top: 50%;
-  right: 50%;
+.animacaoCarregando {
   width: 60px;
   height: 60px;
   background-color: transparent;
-  z-index: 1;
-  border: 5px solid #69ee10;
+  border: 5px solid black;
   border-bottom-color: transparent;
   border-radius: 50%;
   animation: rotacao 3s linear;
