@@ -39,8 +39,34 @@ export function imprimirUmDeCadaCategoria(produtos) {
         </div>
       `;
 
+      const gerarHTMLCarrossel = (imagens, nome) => {
+        if (typeof imagens !== "object" || Array.isArray(imagens)) {
+          console.error("as imagens devem ser enviadas como um objeto");
+          return "";
+        }
+        const urlsImagens = [imagens.mobile, imagens.tablet, imagens.desktop];
+        return `
+        <div id="carrossel${nome}" class="slideshow-container">
+          ${urlsImagens.map(
+            (urlImagem, indice) => `
+              <div class="meusSlides-${nome} fade">
+                <img src=${urlImagem} alt="imagem ${indice}" style="width: 100%" />
+              </div>
+            `
+          )}
+          <a class="anterior" id="anterior-${nome}">&#10094;</a>
+          <a class="proxima" id="proxima-${nome}">&#10095;</a>
+        </div>
+        `;
+      };
+
       card.innerHTML = images + cardBody;
       card.className = "card card-animado";
+
+      const carrossel = gerarHTMLCarrossel(
+        produto.imagens,
+        produto.nome.replace(/\s+/g, "-")
+      );
 
       const modalContent = `
         <div class="modal-content">
@@ -52,9 +78,7 @@ export function imprimirUmDeCadaCategoria(produtos) {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <img class="modal-imagem" src="${produto.imagens.desktop}" alt="${
-        produto.nome
-      }">
+            ${carrossel}
             <div>
               <h3>${produto.nome}</h3>
               <p class="modal-description">${produto.descricao}</p>
@@ -134,6 +158,30 @@ export function imprimirUmDeCadaCategoria(produtos) {
         `#adicionar-btn-${produto.nome.replace(/\s+/g, "-")}`
       );
       botao.addEventListener("click", () => adicionarProduto(produto));
+
+      let indiceSlide = 1;
+      const mostrarSlides = (numero) => {
+        const slides = document.querySelectorAll(
+          `.meusSlides-${produto.nome.replace(/\s+/g, "-")}`
+        );
+        if (numero > slides.length) indiceSlide = 1;
+        if (numero < 1) indiceSlide = slides.length;
+        slides.forEach((slide) => (slide.style.display = "none"));
+        slides[indiceSlide - 1].style.display = "block";
+      };
+
+      const maisSlides = (numero) => mostrarSlides((indice += numero));
+      document.getElementById(
+        `anterior-${produto.nome.replace(/\s+/g, "-")}`
+      ).onclick = () => {
+        maisSlides(-1);
+      };
+      document.getElementById(
+        `proxima-${produto.nome.replace(/\s+/g, "-")}`
+      ).onclick = () => {
+        maisSlides(1);
+      };
+      mostrarSlides(indiceSlide);
     }
   }
 
@@ -142,7 +190,7 @@ export function imprimirUmDeCadaCategoria(produtos) {
     return (
       retangulo.top >= 0 &&
       retangulo.left >= 0 &&
-      retangulo.botton <=
+      retangulo.bottom <=
         (window.innerHeight || document.documentElement.clientHeight) &&
       retangulo.right <=
         (window.innerWidth || document.documentElement.clientWidth)
@@ -151,11 +199,11 @@ export function imprimirUmDeCadaCategoria(produtos) {
 
   function elementoEstaNaSecaoDosCards(elemento) {
     const secaoDosCards = document.getElementById("produtos");
-    const retanguloDoElemento = elemento.getBoundingClientRect();
+    const retanguloElemento = elemento.getBoundingClientRect();
     const retanguloSecao = secaoDosCards.getBoundingClientRect();
     return (
-      retanguloDoElemento.top >= retanguloSecao.top &&
-      retanguloDoElemento.botton >= retanguloSecao.bottom
+      retanguloElemento.top >= retanguloSecao.top &&
+      retanguloElemento.bottom <= retanguloSecao.bottom
     );
   }
 
