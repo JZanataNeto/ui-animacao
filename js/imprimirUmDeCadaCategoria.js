@@ -158,7 +158,6 @@ export function imprimirUmDeCadaCategoria(produtos) {
         `#adicionar-btn-${produto.nome.replace(/\s+/g, "-")}`
       );
       botao.addEventListener("click", () => adicionarProduto(produto));
-
       let indiceSlide = 1;
       const mostrarSlides = (numero) => {
         const slides = document.querySelectorAll(
